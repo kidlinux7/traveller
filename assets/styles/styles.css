@@ -1,0 +1,11 @@
+.card-text{
+    color: rgb(185, 185, 185);
+    margin-bottom: 2px;
+}
+.card-price{
+    color: rgb(112, 112, 112);
+    font-weight: 500;
+    font-size: 1.7em;
+    margin-top: 0px;
+
+}

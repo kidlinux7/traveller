@@ -15,8 +15,15 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css'} 
-    ]
+      { rel: 'stylesheet', href: 'https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css'}
+    ],
+    script:[
+      { src:'~/assets/bootstrap/popper.js'},
+      { src:'~/assets/bootstrap/jquery.min.js'},
+      { src:'@/assets/bootstrap/bootstrap.min.js'},
+  
+  
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -26,14 +33,12 @@ export default {
     
   ],
 
-  js:[
-    '@/assets/bootstrap/bootstrap.min.js',
-    '@/assets/bootstrap/popper.js'
-  ],
+
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '@/plugins/mapbox'
+    '@/plugins/mapbox',
+    '@/plugins/skeleton'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

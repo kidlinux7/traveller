@@ -4,11 +4,17 @@ import axios from 'axios'
 let baseUrl = "https://travel-advisor.p.rapidapi.com/restaurants/list?location_id=293919&restaurant_tagcategory=10591&restaurant_tagcategory_standalone=10591&currency=USD&lunit=km&limit=10&open_now=false&lang=en_US"
 
 export const state = () => ({
+    loader: false,
     restaurants: [],
 })
 
 
 export const mutations = {
+    //Loading Indicator
+    SET_LOADER_STATE(state, newloader) {
+        state.loader = newloader
+    },
+
     SET_RESTAURANTS(state, restaurants) {
         state.restaurants = restaurants
     }
@@ -17,6 +23,7 @@ export const mutations = {
 
 export const actions = {
     getAllRestaurants({ commit }) {
+        commit('SET_LOADER_STATE', true)
         axios.get(baseUrl, {
             headers: {
                 'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com',
@@ -27,6 +34,8 @@ export const actions = {
             // localStorage.setItem(restaurants)
             console.log(data.data.data)
             commit('SET_RESTAURANTS', restaurants)
+            commit('SET_LOADER_STATE', false)
+
         }).catch((e) => {
             console.log(e)
         })
@@ -35,6 +44,9 @@ export const actions = {
 
 
 export const getters = {
+    loader(state) {
+        return state.loader
+    },
     restaurants(state) {
         return state.restaurants
     }

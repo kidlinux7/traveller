@@ -105,22 +105,51 @@
         <!-- Results cards -->
         <div class="row" id="leftBox">
           <!-- <div v-for="restaraunt in restaurants" v-bind:key="restaraunt.id"> -->
+          <div v-if="loader">
+            <div class="container">
+              <div class="row mx-auto">
+                <div
+                  class="
+                    col-xxl-4
+                    col-xl-4
+                    col-lg-4
+                    col-md-6
+                    col-sm-12
+                    col-xs-12
+                    col-12
+                  "
+                  v-for="index in 9"
+                  :key="index"
+                >
+                  <div
+                    class="skeleton skeleton-rect mx-auto"
+                    style="--rect-h: 300px; --t: 0.6s"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div > -->
           <div
+            v-else
             v-for="restaraunt in restaurants"
             v-bind:key="restaraunt.id"
             class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6"
           >
-            <div class="card" style="width: 18rem">
-              <!-- <div v-if="restaraunt.photo.images === undefined">
-                <p>No image</p>
+            <div class="card" style="width: 18rem" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+              <div v-if="restaraunt.photo === undefined">
+                <div
+                  class="skeleton skeleton-rect mx-auto"
+                  style="--rect-h: 300px; --t: 0.6s"
+                ></div>
               </div>
               <div v-else>
                 <img
-                  :src="restaraunt.photo.images.medium.url"
+                  :src="restaraunt.photo.images.original.url"
                   class="card-img-top"
                   alt="..."
                 />
-              </div> -->
+              </div>
               <div class="card-body">
                 <h5 class="card-title">{{ restaraunt.address }}</h5>
                 <p class="card-text">{{ restaraunt.name }}</p>
@@ -129,8 +158,21 @@
             </div>
           </div>
           <!-- </div> -->
+
+          <!-- </div> -->
         </div>
       </div>
+
+<!-- Offcanvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel">Offcanvas right</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    ...
+  </div>
+</div>
 
       <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <div id="mapSection"></div>
@@ -140,6 +182,7 @@
 </template>
 <script>
 import mapboxgl from "mapbox-gl";
+import "css-skeletons";
 
 export default {
   name: "IndexPage",
@@ -153,6 +196,9 @@ export default {
     this.$store.dispatch("getAllRestaurants");
   },
   computed: {
+    loader() {
+      return this.$store.getters.loader;
+    },
     restaurants() {
       return this.$store.getters.restaurants;
     },
@@ -171,22 +217,18 @@ export default {
       // ],
     });
 
-
-
     // Add geolocate control to the map.
     // map.addControl(
-      new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true,
-        },
-        // When active the map will receive updates to the device's location as it changes.
-        trackUserLocation: true,
-        // Draw an arrow next to the location dot to indicate which direction the device is heading.
-        showUserHeading: true,
-      })
+    new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      // When active the map will receive updates to the device's location as it changes.
+      trackUserLocation: true,
+      // Draw an arrow next to the location dot to indicate which direction the device is heading.
+      showUserHeading: true,
+    });
     // );
-
- 
   },
 };
 </script>

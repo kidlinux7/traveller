@@ -9,3 +9,15 @@
     margin-top: 0px;
 
 }
+.skeleton{
+    border-radius: 10px;
+}
+
+.card{
+    border-radius: 0px;
+    cursor: pointer;
+}
+.card:hover{
+    width: 20rem;
+
+}

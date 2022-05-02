@@ -136,7 +136,13 @@
             v-bind:key="restaraunt.id"
             class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6"
           >
-            <div class="card" style="width: 18rem" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <div
+              class="card"
+              style="width: 18rem"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasRight"
+              aria-controls="offcanvasRight"
+            >
               <div v-if="restaraunt.photo === undefined">
                 <div
                   class="skeleton skeleton-rect mx-auto"
@@ -163,16 +169,24 @@
         </div>
       </div>
 
-<!-- Offcanvas -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-  <div class="offcanvas-header">
-    <h5 id="offcanvasRightLabel">Offcanvas right</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    ...
-  </div>
-</div>
+      <!-- Offcanvas -->
+      <div
+        class="offcanvas offcanvas-end"
+        tabindex="-1"
+        id="offcanvasRight"
+        aria-labelledby="offcanvasRightLabel"
+      >
+        <div class="offcanvas-header">
+          <h5 id="offcanvasRightLabel">Offcanvas right</h5>
+          <button
+            type="button"
+            class="btn-close text-reset"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="offcanvas-body">...</div>
+      </div>
 
       <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <div id="mapSection"></div>
@@ -193,7 +207,25 @@ export default {
     };
   },
   beforeMount() {
-    this.$store.dispatch("getAllRestaurants");
+    this.$store.dispatch("getLatLong");
+
+    // Get current location
+    // navigator.geolocation.getCurrentPosition(
+    //   (position) => {
+    //     this.mylat = position.coords.latitude;
+    //     this.mylong = position.coords.longitude;
+    //     // console.log(this.mylat);
+    //     // console.log(this.mylong);
+
+    //     this.$store.dispatch("getAllRestaurants",{
+    //       mylatitude:this.mylat,
+    //       mylongitude:this.mylong
+    //     })
+    //   },
+    //   (error) => {
+    //     console.log(error.message);
+    //   }
+    // );
   },
   computed: {
     loader() {
@@ -202,33 +234,29 @@ export default {
     restaurants() {
       return this.$store.getters.restaurants;
     },
+    mylat() {
+      return this.$store.getters.mylat;
+    },
+    mylong() {
+      return this.$store.getters.mylong;
+    },
   },
+
   mounted() {
+    this.$store.dispatch("getAllRestaurants");
+
     mapboxgl.accessToken = this.accessToken;
-    new mapboxgl.Map({
+    const map = new mapboxgl.Map({
       container: "mapSection",
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [6.7924, 39.2083],
-      zoom: 4,
+      center: [this.mylat, this.mylong],
+      zoom: 3,
       marker: true,
-      // maxBounds: [
-      //   [103.6, 1.1704753],
-      //   [104.1, 1.4754753],
-      // ],
     });
 
-    // Add geolocate control to the map.
-    // map.addControl(
-    new mapboxgl.GeolocateControl({
-      positionOptions: {
-        enableHighAccuracy: true,
-      },
-      // When active the map will receive updates to the device's location as it changes.
-      trackUserLocation: true,
-      // Draw an arrow next to the location dot to indicate which direction the device is heading.
-      showUserHeading: true,
-    });
-    // );
+    // const marker1 = new mapboxgl.Marker()
+    //   .setLngLat([this.$store.getters.mylat, this.$store.getters.mylong])
+    //   .addTo(map);
   },
 };
 </script>

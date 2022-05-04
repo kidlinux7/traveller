@@ -11,7 +11,7 @@ export const state = () => ({
     currency: 'USD',
     distance_unit: 'km',
     limit: 10,
-    open_now: false,
+    open_now: true,
 })
 
 
@@ -31,6 +31,14 @@ export const mutations = {
     },
     SET_LONGITUDE(state, mylong) {
         state.mylong = mylong
+    },
+
+    SET_OPENED_NOW(state, open_now){
+        state.open_now = open_now
+    },
+
+    SET_DISTANCE(state, limit){
+        state.limit = limit
     }
 }
 
@@ -48,6 +56,8 @@ export const actions = {
 
                     commit('SET_LATITUDE', mylat)
                     commit('SET_LONGITUDE', mylong)
+
+                    // console.log(mylong)
     
                 },
                 (error) => {
@@ -65,6 +75,9 @@ export const actions = {
 
                     commit('SET_LATITUDE', mylat)
                     commit('SET_LONGITUDE', mylong)
+
+                    console.log(mylong)
+
     
                 },
                 (error) => {
@@ -76,12 +89,12 @@ export const actions = {
     },
 
 
-    getAllRestaurants({ commit }) {
+    getAllRestaurants({ commit , dispatch }) {
        let lat = parseFloat(localStorage.getItem('mylat'));
        let long = parseFloat(localStorage.getItem('mylong'));
       
         commit('SET_LOADER_STATE', true)
-        axios.get('https://travel-advisor.p.rapidapi.com/restaurants/list-by-latlng?latitude=' + lat + '&longitude=' + long + '&restaurant_tagcategory=10591&restaurant_tagcategory_standalone=10591&currency=USD&lunit=km&limit=10&open_now=false&lang=en_US', {
+        axios.get('https://travel-advisor.p.rapidapi.com/restaurants/list-by-latlng?latitude=' + lat + '&longitude=' + long + '&currency=USD&lunit=km&limit='+ this.state.limit +'&open_now='+ this.state.open_now +'&lang=en_US', {
             headers: {
                 'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com',
                 'X-RapidAPI-Key': '8a1b68e31amsh61b19fbf46c184ap1e9200jsn02383985bb94'
@@ -93,14 +106,43 @@ export const actions = {
             commit('SET_RESTAURANTS', restaurants)
             commit('SET_LOADER_STATE', false)
 
+            // Refreshing mylat and long
+            dispatch('getLatLong');
+
+
         }).catch((e) => {
             console.log(e)
         })
+    },
+
+    setOpenedNow({ commit , dispatch}){
+        if( this.state.open_now == true ){
+            let open_now = false
+            commit('SET_OPENED_NOW',open_now)
+            dispatch('getAllRestaurants');
+            
+        }else{
+            let open_now = true
+            commit('SET_OPENED_NOW',open_now)
+            dispatch('getAllRestaurants');
+        }
+    },
+
+    distance({ commit, dispatch }, { km }){
+        let limit = km
+        commit('SET_DISTANCE',limit)
+        dispatch('getAllRestaurants');
     }
 }
 
 
 export const getters = {
+    limit(state){
+        return state.limit
+    },
+    open_now(state){
+        return state.open_now
+    },
     loader(state) {
         return state.loader
     },

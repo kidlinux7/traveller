@@ -4,7 +4,12 @@
       <div
         class="mt-5 col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12"
       >
-        <h3>156 Results in New York, US</h3>
+      <div v-if="restaurants.length == 1">
+        <h3>{{restaurants.length}} Restaurant<span style="font-weight:300;"> found near you</span></h3>
+      </div>
+      <div v-else>
+        <h3>{{restaurants.length}} Restaurants<span style="font-weight:300;"> found near you</span></h3>
+      </div>
         <div class="d-flex flex-row">
           <!-- Places -->
           <div class="btn-group p-1">
@@ -28,19 +33,22 @@
           <!-- BedRooms -->
           <div class="btn-group p-1">
             <button
+            id="display_distance"
               type="button"
               class="btn btn-light dropdown-toggle"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              2 - 4 Beds
+              10 km 
             </button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-              <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="#">Separated link</a></li>
+              <li><a class="dropdown-item"  @click="getDistance(0.5)">0.5 km</a></li>
+              <li><a class="dropdown-item"  @click="getDistance(1)">1 km</a></li>
+              <li><a class="dropdown-item"  @click="getDistance(3)">3 km</a></li>
+              <li><a class="dropdown-item"  @click="getDistance(5)">5 km</a></li>
+              <li><a class="dropdown-item"  @click="getDistance(10)">10 km</a></li>
+              <li><a class="dropdown-item"  @click="getDistance(30)">30 km</a></li>
+
             </ul>
           </div>
 
@@ -61,6 +69,15 @@
               <li><hr class="dropdown-divider" /></li>
               <li><a class="dropdown-item" href="#">Separated link</a></li>
             </ul>
+          </div>
+
+          <div class="d-flex flex-row">
+            <div v-if="open_now == true">
+              <button  @click="openedNow()" class="btn btn-light">Opened now</button>
+            </div>
+            <div v-else>
+              <button  @click="openedNow()" class="btn btn-dark">Closed now</button>
+            </div>
           </div>
         </div>
 
@@ -154,12 +171,13 @@
                   :src="restaraunt.photo.images.original.url"
                   class="card-img-top"
                   alt="..."
+                  height="250px"
                 />
               </div>
               <div class="card-body">
                 <h5 class="card-title">{{ restaraunt.address }}</h5>
                 <p class="card-text">{{ restaraunt.name }}</p>
-                <p class="card-price">{{ restaraunt.price }}</p>
+                <!-- <p class="card-price">{{ restaraunt.price }}</p> -->
               </div>
             </div>
           </div>
@@ -206,28 +224,30 @@ export default {
         "pk.eyJ1IjoibWFsaWstIiwiYSI6ImNsMWR5NTNzZjBseHIzYnAydHNhZThzd3UifQ.9c1XElq7v4Jwy0HfjxcSRA",
     };
   },
+  methods:{
+    openedNow(){
+      this.$store.dispatch('setOpenedNow');
+    },
+    getDistance(value){
+      document.getElementById("display_distance").innerHTML = value + 'km'
+      this.$store.dispatch("distance",{
+        km:value
+      })
+    }
+
+
+  },
   beforeMount() {
     this.$store.dispatch("getLatLong");
 
-    // Get current location
-    // navigator.geolocation.getCurrentPosition(
-    //   (position) => {
-    //     this.mylat = position.coords.latitude;
-    //     this.mylong = position.coords.longitude;
-    //     // console.log(this.mylat);
-    //     // console.log(this.mylong);
-
-    //     this.$store.dispatch("getAllRestaurants",{
-    //       mylatitude:this.mylat,
-    //       mylongitude:this.mylong
-    //     })
-    //   },
-    //   (error) => {
-    //     console.log(error.message);
-    //   }
-    // );
   },
   computed: {
+    limit(){
+      return this.$store.getters.limit;
+    },
+    open_now() {
+      return this.$store.getters.open_now;
+    },
     loader() {
       return this.$store.getters.loader;
     },

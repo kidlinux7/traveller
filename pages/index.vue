@@ -274,9 +274,13 @@ export default {
       marker: true,
     });
 
-    // const marker1 = new mapboxgl.Marker()
-    //   .setLngLat([this.$store.getters.mylat, this.$store.getters.mylong])
-    //   .addTo(map);
+    const marker1 = new mapboxgl.Marker()
+      .setLngLat([this.$store.getters.mylat, this.$store.getters.mylong])
+      .addTo(map);
+
+    const marker2 = new mapboxgl.Marker({ color: 'black', rotation: 45 })
+      .setLngLat([12.65147, 55.608166])
+      .addTo(map);
   },
 };
 </script>

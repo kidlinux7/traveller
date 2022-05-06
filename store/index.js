@@ -51,8 +51,8 @@ export const actions = {
                     let mylat = position.coords.latitude;
                     let mylong = position.coords.longitude;
     
-                    localStorage.setItem('mylat')
-                    localStorage.setItem('mylong')
+                    localStorage.setItem('mylat',mylat)
+                    localStorage.setItem('mylong', mylong)
 
                     commit('SET_LATITUDE', mylat)
                     commit('SET_LONGITUDE', mylong)
@@ -70,8 +70,8 @@ export const actions = {
                     let mylat = position.coords.latitude;
                     let mylong = position.coords.longitude;
     
-                    localStorage.setItem('mylat')
-                    localStorage.setItem('mylong')
+                    localStorage.setItem('mylat',mylat)
+                    localStorage.setItem('mylong', mylong)
 
                     commit('SET_LATITUDE', mylat)
                     commit('SET_LONGITUDE', mylong)
